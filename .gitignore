@@ -1,0 +1,6 @@
+userinfo.ini
+target/
+Output-Data.txt
+.java-version
+*.png
+*.svg

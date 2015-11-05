@@ -8,12 +8,23 @@ import com.gaocegege.scrala.core.common.request.impl.HttpRequest
 import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 import org.apache.http.util.EntityUtils
 import org.apache.http.client.ClientProtocolException
+import akka.actor.Actor
+import com.gaocegege.scrala.core.common.request.impl.HttpRequest
+import com.gaocegege.scrala.core.common.util.Constant
 
 /**
  * Http downloader
  * @author gaoce
  */
-class HttpDownloader extends DefaultHttpClient with Downloader {
+class HttpDownloader extends DefaultHttpClient with Actor with Downloader {
+
+  def receive = {
+    case (request: HttpRequest, index: Int) => {
+      download(request)
+      sender() ! (Constant.endMessage, index)
+    }
+    case _ => logger.info("[Downloader]-unexpected message")
+  }
 
   def download(request: HttpRequest): Response = {
     logger.debug("[Downloading]-Url: " + request.request.getURI)

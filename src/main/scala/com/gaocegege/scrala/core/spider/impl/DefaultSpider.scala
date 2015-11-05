@@ -9,6 +9,9 @@ import org.apache.http.client.methods.HttpGet
 import com.gaocegege.scrala.core.common.request.impl.HttpRequest
 import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 import com.gaocegege.scrala.core.engine.Engine
+import akka.actor.ActorSystem
+import akka.actor.Props
+import com.gaocegege.scrala.core.common.util.Constant
 
 /**
  * Default spider
@@ -16,13 +19,14 @@ import com.gaocegege.scrala.core.engine.Engine
  */
 abstract class DefaultSpider extends Spider {
 
-  private val engine = new Engine(this, new DefaultScheduler, new HttpDownloader)
+  val system = ActorSystem("Spider")
+  private val engine = system.actorOf(Props(new Engine(this, new DefaultScheduler)), "engine")
 
   def request(url: String, callback: (HttpResponse) => Unit): Unit = {
-    engine.request(url, callback)
+    engine ! (url, callback)
   }
 
   def begin(): Unit = {
-    engine.begin()
+    engine ! Constant.startMessage
   }
 }

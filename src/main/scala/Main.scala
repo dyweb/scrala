@@ -2,15 +2,24 @@ import com.gaocegege.scrala.core.spider.impl.DefaultSpider
 import com.gaocegege.scrala.core.common.response.Response
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import com.gaocegege.scrala.core.common.response.impl.HttpResponse
+import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 
 /**
  * @author gaoce
  */
 class TestSpider extends DefaultSpider {
-  def startUrl = List[String]("http://www.baidu.com")
+  def startUrl = List[String]("http://www.gaocegege.com/resume")
 
-  def parse(response: Response): Unit = {
-    println(response.httpResponse)
+  def parse(response: HttpResponse): Unit = {
+    val links = response.getContentParser().select("a")
+    for (i <- 0 to links.size() - 1) {
+      request(links.get(i).attr("href"), printIt)
+    }
+  }
+
+  def printIt(response: HttpResponse): Unit = {
+    println(response.getContentParser().title())
   }
 }
 

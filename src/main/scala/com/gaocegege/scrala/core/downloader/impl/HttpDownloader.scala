@@ -5,6 +5,7 @@ import com.gaocegege.scrala.core.common.request.Request
 import com.gaocegege.scrala.core.downloader.httpclient.DefaultHttpClient
 import com.gaocegege.scrala.core.common.response.Response
 import com.gaocegege.scrala.core.common.request.impl.HttpRequest
+import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 
 /**
  * Http downloader
@@ -13,10 +14,9 @@ import com.gaocegege.scrala.core.common.request.impl.HttpRequest
 class HttpDownloader extends DefaultHttpClient with Downloader {
 
   def download(request: HttpRequest): Response = {
-    val response = new Response {
-      def httpResponse = httpClient.execute(request.request)
-    }
-
+    logger.debug("[Downloading]-Url: " + request.request.getURI)
+    val response = new HttpResponse(httpClient.execute(request.request))
+    logger.debug("[Downloading]-callback")
     request.callback(response)
     response
   }

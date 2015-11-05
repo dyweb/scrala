@@ -7,5 +7,5 @@ import org.apache.http.client.methods.CloseableHttpResponse
  * @author gaoce
  */
 trait Response {
-  def httpResponse: CloseableHttpResponse
+  
 }

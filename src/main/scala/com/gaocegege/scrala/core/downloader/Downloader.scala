@@ -4,6 +4,7 @@ import com.gaocegege.scrala.core.common.response.Response
 import com.gaocegege.scrala.core.common.request.Request
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
+import com.gaocegege.scrala.core.common.request.impl.HttpRequest
 
 /**
  * Downloader interface
@@ -11,4 +12,6 @@ import org.slf4j.LoggerFactory
  */
 trait Downloader {
   val logger = Logger(LoggerFactory.getLogger("downloader"))
+
+  def download(request: HttpRequest): Response
 }

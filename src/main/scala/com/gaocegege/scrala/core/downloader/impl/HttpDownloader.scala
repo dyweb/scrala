@@ -6,6 +6,8 @@ import com.gaocegege.scrala.core.downloader.httpclient.DefaultHttpClient
 import com.gaocegege.scrala.core.common.response.Response
 import com.gaocegege.scrala.core.common.request.impl.HttpRequest
 import com.gaocegege.scrala.core.common.response.impl.HttpResponse
+import org.apache.http.util.EntityUtils
+import org.apache.http.client.ClientProtocolException
 
 /**
  * Http downloader
@@ -15,9 +17,24 @@ class HttpDownloader extends DefaultHttpClient with Downloader {
 
   def download(request: HttpRequest): Response = {
     logger.debug("[Downloading]-Url: " + request.request.getURI)
-    val response = new HttpResponse(httpClient.execute(request.request))
-    logger.debug("[Downloading]-callback")
-    request.callback(response)
-    response
+    try {
+      val response = new HttpResponse(httpClient.execute(request.request))
+      logger.debug("[Downloading]-callback")
+      request.callback(response)
+      val entity = response.getResponse().getEntity()
+      EntityUtils.consume(entity)
+      response
+    } catch {
+      case e: ClientProtocolException => {
+        logger.error("[Downloading]-error: ClientProtocolException")
+        logger.error(e.printStackTrace().toString())
+        new HttpResponse(false)
+      }
+      case t: Throwable => {
+        logger.error(t.printStackTrace().toString())
+        new HttpResponse(false)
+      }
+
+    }
   }
 }

@@ -1,6 +1,7 @@
 lazy val root = (project in file(".")).
   settings(
     name := "scrala",
+    organization := "com.gaocegege",
     version := "0.1",
     scalaVersion := "2.11.6",
 
@@ -14,6 +15,7 @@ lazy val root = (project in file(".")).
     },
     pomIncludeRepository := { _ => false },
     pomExtra := (
+      <groupId>com.gaocegege</groupId>
       <url>https://github.com/gaocegege/scrala</url>
       <licenses>
         <license>

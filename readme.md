@@ -1,8 +1,15 @@
 # scrala
 
-## TODO
+scrala is a web crawling framework for scala, which is inspired by [scrapy](https://github.com/scrapy/scrapy).
 
-1. remove the callback from the downloader, write a engine to deal with the callback.
-2. wrap downloader with actor, to multi thread
-3. robust
-4. rule
+## requirements
+
+* scala 2.11.5
+* sbt 0.13
+
+## install
+
+	git clone https://github.com/gaocegege/scrala.git
+	cd ./scrala
+	sbt assembly
+	

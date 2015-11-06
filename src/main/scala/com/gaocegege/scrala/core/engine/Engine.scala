@@ -35,6 +35,7 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
     }
     case Constant.endMessage => {
       if (scheduler.count() == 0) {
+        logger.info("[Engine]-stop now")
         context.stop(self)
       }
     }
@@ -45,6 +46,7 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
       }
     }
     case Constant.resumeMessage => {
+      logger.debug("[Engine]-resume-count of scheduler: " + scheduler.count())
       for (i <- 1 to scheduler.count()) {
         downloaderManager ! scheduler.pop()
       }

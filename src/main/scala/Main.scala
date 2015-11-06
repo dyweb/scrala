@@ -9,6 +9,7 @@ import com.gaocegege.scrala.core.common.response.impl.HttpResponse
  * @author gaoce
  */
 class TestSpider extends DefaultSpider {
+  var i = 0
   def startUrl = List[String]("http://www.gaocegege.com/resume")
 
   def parse(response: HttpResponse): Unit = {

@@ -36,7 +36,7 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
     case Constant.endMessage => {
       if (scheduler.count() == 0) {
         logger.info("[Engine]-stop now")
-        context.stop(self)
+        // context.stop(self)
       }
     }
     case Constant.startMessage => {

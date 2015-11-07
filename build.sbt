@@ -2,7 +2,7 @@ lazy val root = (project in file(".")).
   settings(
     name := "scrala",
     organization := "com.gaocegege",
-    version := "0.1",
+    version := "0.1.1",
     scalaVersion := "2.11.6",
 
     publishMavenStyle := true,

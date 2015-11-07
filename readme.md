@@ -10,11 +10,14 @@ scrala is a web crawling framework for scala, which is inspired by [scrapy](http
 ## install
 
 ### easy way
-In your build.sbt:
 
-	libraryDependencies += "com.gaocegege" % "scrala_2.11" % "0.1"
+**Step 1.** Add the JitPack repository to your build file
 
-You can get the example project in the `./example/`
+	resolvers += "jitpack" at "https://jitpack.io"
+
+**Step 2.** Add the dependency in the form
+
+	libraryDependencies += "com.github.gaocegege" % "scrala" % "0.1"
 
 ### normal way
 

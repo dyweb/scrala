@@ -17,7 +17,7 @@ import com.gaocegege.scrala.core.engine.manager.status.Status
  * Downloader manager
  * @author gaoce
  */
-class DownloadManager(val threadCount: Int = 16) extends Actor {
+class DownloadManager(engine: ActorRef, val threadCount: Int = 4) extends Actor {
 
   private val logger = Logger(LoggerFactory.getLogger("downloadmanager"))
 
@@ -43,6 +43,7 @@ class DownloadManager(val threadCount: Int = 16) extends Actor {
       states(index) = Status.Done
       if (IsAllDone()) {
         // TODO send to scheduler
+        engine ! Constant.endMessage
       }
     }
     case _ => {

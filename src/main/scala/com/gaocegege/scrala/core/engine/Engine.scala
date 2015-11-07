@@ -24,7 +24,7 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
 
   private val logger = Logger(LoggerFactory.getLogger("engine"))
 
-  private val downloaderManager: ActorRef = context.actorOf(Props(new DownloadManager(16)), "downloadermanager")
+  private val downloaderManager: ActorRef = context.actorOf(Props(new DownloadManager(self, 4)), "downloadermanager")
 
   def receive = {
     case (url: String, callback: Function1[HttpResponse, Unit]) => {
@@ -35,7 +35,8 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
     }
     case Constant.endMessage => {
       if (scheduler.count() == 0) {
-        context.stop(self)
+        logger.info("[Engine]-stop now")
+        // context.stop(self)
       }
     }
     case Constant.startMessage => {
@@ -45,6 +46,7 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
       }
     }
     case Constant.resumeMessage => {
+      logger.debug("[Engine]-resume-count of scheduler: " + scheduler.count())
       for (i <- 1 to scheduler.count()) {
         downloaderManager ! scheduler.pop()
       }

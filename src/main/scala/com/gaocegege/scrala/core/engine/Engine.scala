@@ -22,6 +22,8 @@ import com.gaocegege.scrala.core.engine.manager.DownloadManager
  */
 class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
 
+  private val filter = spider.filter
+
   private val logger = Logger(LoggerFactory.getLogger("engine"))
 
   private val downloaderManager: ActorRef = context.actorOf(Props(new DownloadManager(self, 4)), "downloadermanager")
@@ -29,9 +31,10 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
   def receive = {
     case (url: String, callback: Function1[HttpResponse, Unit]) => {
       logger.info("[Request-create]-Url: " + url)
-      val newRequest = new HttpRequest(new HttpGet(url), callback)
-      scheduler.push(newRequest)
-      self ! Constant.resumeMessage
+      if (filter.filter(url)) {
+        scheduler.push(new HttpRequest(new HttpGet(url), callback))
+        self ! Constant.resumeMessage
+      }
     }
     case Constant.endMessage => {
       if (scheduler.count() == 0) {
@@ -40,7 +43,12 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
       }
     }
     case Constant.startMessage => {
-      spider.startUrl.map { str => scheduler.push(new HttpRequest(new HttpGet(str), spider.parse)) }
+      // get all allowable urls
+      for (url <- spider.startUrl) {
+        if (filter.filter(url)) {
+          scheduler.push(new HttpRequest(new HttpGet(url), spider.parse))
+        }
+      }
       for (i <- 1 to scheduler.count()) {
         downloaderManager ! scheduler.pop()
       }

@@ -3,9 +3,13 @@ package com.gaocegege.scrala.core.spider
 import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
+import com.gaocegege.scrala.core.middleware.filter.impl.DefaultFilter
+import com.gaocegege.scrala.core.middleware.filter.Filter
+import com.gaocegege.scrala.core.middleware.filter.impl.DefaultFilter
 
 trait Spider {
   def startUrl: List[String]
+  def filter: Filter = new DefaultFilter
   def parse(response: HttpResponse): Unit
   def begin(): Unit
   def request(url: String, callback: (HttpResponse) => Unit): Unit

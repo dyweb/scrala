@@ -1,5 +1,7 @@
 # scrala
 
+[![Join the chat at https://gitter.im/gaocegege/scrala](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gaocegege/scrala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 scrala is a web crawling framework for scala, which is inspired by [scrapy](https://github.com/scrapy/scrapy).
 
 ## requirements

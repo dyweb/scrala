@@ -5,3 +5,4 @@ target/
 .settings/
 /bin/
 .cache*
+dump.txt

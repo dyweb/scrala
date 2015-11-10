@@ -15,11 +15,11 @@ import java.io.File
  */
 class SJTUSpider extends DefaultSpider {
 
+  override var threadCount: Int = 1
+
   def getUrlByLocation(location: String): String = {
     "https://api.github.com/search/users?q=location:%22" + location + "%22"
   }
-
-  val writer = new PrintWriter(new File("dump.txt"))
 
   def startUrl = List[String](getUrlByLocation("shanghai+jiaotong"), getUrlByLocation("shanghai+jiao+tong"))
 
@@ -38,10 +38,11 @@ class SJTUSpider extends DefaultSpider {
 
   def getUserDetail(response: HttpResponse): Unit = {
     val json = JsonMethods.parse(response.getContent())
-    //    writer.write((json \ "login") + (json \ "followers").toString() + "\n")
-    println(json)
+    val writer = new PrintWriter(new File("dump.txt"))
+    writer.append((json \ "login").values + "\t" + (json \ "home_url").values + "\t" + (json \ "followers").values + "\n")
+    writer.close()
+    println((json \ "login") + (json \ "followers").toString() + "\n")
   }
-  writer.close()
 }
 
 object Main {

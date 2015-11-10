@@ -17,7 +17,7 @@ scrala is a web crawling framework for scala, which is inspired by [scrapy](http
 
 **Step 2.** Add the dependency in the form
 
-	libraryDependencies += "com.github.gaocegege" % "scrala" % "0.1"
+	libraryDependencies += "com.github.gaocegege" % "scrala" % "0.1.3"
 
 ### normal way
 

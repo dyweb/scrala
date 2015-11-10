@@ -15,4 +15,8 @@ trait Spider {
   def request(url: String, callback: (HttpResponse) => Unit): Unit
 
   val logger = Logger(LoggerFactory.getLogger("spider"))
+  private[this] var _threadCount = 4
+  def threadCount: Int = _threadCount;
+  def threadCount_=(v: Int) { _threadCount = v; };
+
 }

@@ -26,7 +26,9 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
 
   private val logger = Logger(LoggerFactory.getLogger("engine"))
 
-  private val downloaderManager: ActorRef = context.actorOf(Props(new DownloadManager(self, 4)), "downloadermanager")
+  logger.info("[thread-count]-" + spider.threadCount)
+
+  private val downloaderManager: ActorRef = context.actorOf(Props(new DownloadManager(self, spider.threadCount)), "downloadermanager")
 
   def receive = {
     case (url: String, callback: Function1[HttpResponse, Unit]) => {

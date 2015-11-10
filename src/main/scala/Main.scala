@@ -4,31 +4,49 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 import com.gaocegege.scrala.core.common.response.impl.HttpResponse
-import com.gaocegege.scrala.core.middleware.filter.impl.UrlDupFilter
-import com.gaocegege.scrala.core.middleware.filter.Filter
+import org.json4s._
+import org.json4s.native.JsonMethods
+import java.io.PrintWriter
+import java.io.File
 
 /**
+ * get sjtu coders from github
  * @author gaoce
  */
-class TestSpider extends DefaultSpider {
-  def startUrl = List[String]("http://www.gaocegege.com/resume")
-  override def filter = new UrlDupFilter
+class SJTUSpider extends DefaultSpider {
+
+  def getUrlByLocation(location: String): String = {
+    "https://api.github.com/search/users?q=location:%22" + location + "%22"
+  }
+
+  val writer = new PrintWriter(new File("dump.txt"))
+
+  def startUrl = List[String](getUrlByLocation("shanghai+jiaotong"), getUrlByLocation("shanghai+jiao+tong"))
 
   def parse(response: HttpResponse): Unit = {
-    val links = response.getContentParser().select("a")
-    for (i <- 0 to links.size() - 1) {
-      request(links.get(i).attr("href"), printIt)
+    val json = JsonMethods.parse(response.getContent())
+    (for {
+      JObject(child) <- json
+      JField("url", JString(url)) <- child
+    } yield url).foreach {
+      (url: String) =>
+        {
+          request(url, getUserDetail)
+        }
     }
   }
 
-  def printIt(response: HttpResponse): Unit = {
-    println(response.getContentParser().title())
+  def getUserDetail(response: HttpResponse): Unit = {
+    val json = JsonMethods.parse(response.getContent())
+    //    writer.write((json \ "login") + (json \ "followers").toString() + "\n")
+    println(json)
   }
+  writer.close()
 }
 
 object Main {
   def main(args: Array[String]) {
-    val test = new TestSpider
+    val test = new SJTUSpider
     test.begin
   }
 }

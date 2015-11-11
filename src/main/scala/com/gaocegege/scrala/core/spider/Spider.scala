@@ -5,7 +5,6 @@ import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
 import com.gaocegege.scrala.core.middleware.filter.impl.DefaultFilter
 import com.gaocegege.scrala.core.middleware.filter.Filter
-import com.gaocegege.scrala.core.middleware.filter.impl.DefaultFilter
 
 trait Spider {
   def startUrl: List[String]

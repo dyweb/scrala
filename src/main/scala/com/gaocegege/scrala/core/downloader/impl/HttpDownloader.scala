@@ -40,11 +40,6 @@ class HttpDownloader extends DefaultHttpClient with Actor with Downloader {
         logger.error(e.printStackTrace().toString())
         new HttpResponse(false)
       }
-      case t: Throwable => {
-        logger.error(t.printStackTrace().toString())
-        new HttpResponse(false)
-      }
-
     }
   }
 }

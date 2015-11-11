@@ -8,12 +8,8 @@ import org.slf4j.LoggerFactory
 import com.gaocegege.scrala.core.common.request.impl.HttpRequest
 import org.apache.http.client.methods.HttpGet
 import com.gaocegege.scrala.core.common.response.impl.HttpResponse
-import akka.actor.Actor
+import akka.actor.{ Props, ActorRef, Actor }
 import com.gaocegege.scrala.core.common.util.Constant
-import com.gaocegege.scrala.core.engine.manager.DownloadManager
-import akka.actor.Props
-import akka.actor.ActorRef
-import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 import com.gaocegege.scrala.core.engine.manager.DownloadManager
 
 /**

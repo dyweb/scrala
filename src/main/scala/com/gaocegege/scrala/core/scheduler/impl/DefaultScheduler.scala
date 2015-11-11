@@ -1,7 +1,7 @@
 package com.gaocegege.scrala.core.scheduler.impl
 
 import com.gaocegege.scrala.core.scheduler.Scheduler
-import scala.collection.mutable.Queue
+import scala.collection.mutable
 import com.gaocegege.scrala.core.common.request.impl.HttpRequest
 
 /**
@@ -10,7 +10,7 @@ import com.gaocegege.scrala.core.common.request.impl.HttpRequest
  * @notice Not thread safe
  */
 class DefaultScheduler extends Scheduler {
-  val queue: Queue[HttpRequest] = new Queue[HttpRequest]()
+  val queue: mutable.Queue[HttpRequest] = new mutable.Queue[HttpRequest]()
 
   def push(request: HttpRequest): Unit = {
     queue.enqueue(request)

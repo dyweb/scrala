@@ -15,7 +15,7 @@ object ConvertTool {
    * @return string
    */
   def convertResponse2String(response: CloseableHttpResponse): String = {
-    var rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))
+    val rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()))
     var content = ""
     var line = rd.readLine()
     while (line != null) {

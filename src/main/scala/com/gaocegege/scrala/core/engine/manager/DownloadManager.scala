@@ -35,8 +35,8 @@ class DownloadManager(engine: ActorRef, val threadCount: Int = 4) extends Actor 
   def receive = {
     case request: Request => {
       val index = Random.nextInt(threadCount)
-      workers(index) ! (request, index)
       states(index) = Status.Working
+      workers(index) ! (request, index)
     }
     case (Constant.endMessage, index: Int) => {
       states(index) = Status.Done

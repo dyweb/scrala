@@ -48,6 +48,18 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
         }
       }
       for (i <- 1 to scheduler.count()) {
+        // One downloader situation: 
+        // pop the element, so in this message, the scheduler is empty,
+        // and dowloaderManager dispatch the work, when it's done,
+        // THE BAD THING happened, everytime the downloader has done, 
+        // it will send end message to engine, and the scheduler is always
+        // empty, then will call stop multi times.
+        // FXXK THE ASYNCHRONOUS!!!!!!!!!!!
+
+        // solution:
+        // 1. in the startMessage and resumeMessage, don't pop, just
+        //     give the downloaderManager the first element, when get
+        //     the endMessage, pop it.
         downloaderManager ! scheduler.pop()
       }
     }

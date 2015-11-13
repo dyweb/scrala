@@ -25,7 +25,7 @@ scrala is a web crawling framework for scala, which is inspired by [scrapy](http
 	cd ./scrala
 	sbt assembly
 
-You will get the jar in `./target/scala-<version>/`
+You will get the jar in `./target/scala-<version>/`.
 
 ## example
 

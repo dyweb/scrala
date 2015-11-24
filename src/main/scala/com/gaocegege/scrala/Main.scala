@@ -6,8 +6,7 @@ import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 import org.json4s._
 import org.json4s.native.JsonMethods
-import java.io.PrintWriter
-import java.io.File
+import java.io.FileWriter
 
 /**
  * get sjtu coders from github
@@ -21,7 +20,10 @@ class SJTUSpider extends DefaultSpider {
     "https://api.github.com/search/users?q=location:%22" + location + "%22"
   }
 
-  def startUrl = List[String](getUrlByLocation("shanghai+jiaotong"), getUrlByLocation("shanghai+jiao+tong"))
+  // name of shanghai jiao tong univ
+  val names = List[String]("shanghai+jiaotong", "shanghai+jiao+tong", "上海交通大学", "上海交大", "SJTU");
+
+  def startUrl = names.map { name => getUrlByLocation(name) }
 
   def parse(response: HttpResponse): Unit = {
     val json = JsonMethods.parse(response.getContent())
@@ -38,8 +40,8 @@ class SJTUSpider extends DefaultSpider {
 
   def getUserDetail(response: HttpResponse): Unit = {
     val json = JsonMethods.parse(response.getContent())
-    val writer = new PrintWriter(new File("dump.txt"))
-    writer.append((json \ "login").values + "\t" + (json \ "home_url").values + "\t" + (json \ "followers").values + "\n")
+    val writer = new FileWriter("dump.txt", true)
+    writer.write((json \ "login").values + "\t" + (json \ "home_url").values + "\t" + (json \ "followers").values + "\n")
     writer.close()
     println((json \ "login") + (json \ "followers").toString() + "\n")
   }

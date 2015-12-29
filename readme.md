@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/gaocegege/scrala.png?label=ready&title=Ready)](https://waffle.io/gaocegege/scrala)
 # scrala
 
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/563bbcd12d874610bca7313abe6e6fdd)](https://www.codacy.com/app/gaocegege/scrala)

@@ -11,6 +11,7 @@ import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 import akka.actor.{ Props, ActorRef, Actor }
 import com.gaocegege.scrala.core.common.util.Constant
 import com.gaocegege.scrala.core.engine.manager.DownloadManager
+import akka.actor.PoisonPill
 
 /**
  * Engine, responsable for ?
@@ -27,6 +28,7 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
   private val downloaderManager: ActorRef = context.actorOf(Props(new DownloadManager(self, spider.threadCount)), "downloadermanager")
 
   def receive = {
+    // request from the spider class
     case (url: String, callback: Function1[HttpResponse, Unit]) => {
       logger.info("[Request-create]-Url: " + url)
       if (filter.filter(url)) {
@@ -34,11 +36,10 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
         self ! Constant.resumeMessage
       }
     }
-    case Constant.endMessage => {
-      if (scheduler.count() == 0) {
-        logger.info("[Engine]-stop now")
-        // context.stop(self)
-      }
+    // push the poison to the scheduler
+    case Constant.poisonMessage => {
+      scheduler.push(new HttpRequest(new HttpGet("Posion"), null, true))
+      self ! Constant.resumeMessage
     }
     case Constant.startMessage => {
       // get all allowable urls
@@ -48,25 +49,27 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
         }
       }
       for (i <- 1 to scheduler.count()) {
-        // One downloader situation: 
+        // One downloader situation:
         // pop the element, so in this message, the scheduler is empty,
         // and dowloaderManager dispatch the work, when it's done,
-        // THE BAD THING happened, everytime the downloader has done, 
+        // THE BAD THING happened, everytime the downloader has done,
         // it will send end message to engine, and the scheduler is always
         // empty, then will call stop multi times.
         // FXXK THE ASYNCHRONOUS!!!!!!!!!!!
-
-        // solution:
-        // 1. in the startMessage and resumeMessage, don't pop, just
-        //     give the downloaderManager the first element, when get
-        //     the endMessage, pop it.
         downloaderManager ! scheduler.pop()
       }
     }
     case Constant.resumeMessage => {
       logger.debug("[Engine]-resume-count of scheduler: " + scheduler.count())
       for (i <- 1 to scheduler.count()) {
-        downloaderManager ! scheduler.pop()
+        val req = scheduler.pop()
+        if (req.isPoisonPill) {
+          logger.info("poison to you, my dear")
+          downloaderManager ! Constant.poisonMessage
+          self.tell(PoisonPill.getInstance, self)
+        } else {
+          downloaderManager ! req
+        }
       }
     }
     case _ => logger.warn("[Engine]-unexpected message")

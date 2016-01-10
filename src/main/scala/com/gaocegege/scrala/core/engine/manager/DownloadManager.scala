@@ -5,12 +5,13 @@ import com.gaocegege.scrala.core.downloader.Downloader
 import scala.collection.mutable
 import com.gaocegege.scrala.core.downloader.impl.HttpDownloader
 import akka.actor.{ Props, ActorRef }
-import com.gaocegege.scrala.core.common.request.Request
 import scala.util.Random
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
 import com.gaocegege.scrala.core.common.util.Constant
 import com.gaocegege.scrala.core.engine.manager.status.Status
+import com.gaocegege.scrala.core.common.request.impl.HttpRequest
+import akka.actor.PoisonPill
 
 /**
  * Downloader manager
@@ -27,30 +28,21 @@ class DownloadManager(engine: ActorRef, val threadCount: Int = 4) extends Actor 
     workers.append(context.actorOf(Props[HttpDownloader], "worker-" + i.toString()))
   }
 
-  private val states: mutable.ListBuffer[Status.Value] = mutable.ListBuffer.fill(threadCount)(Status.Done)
-
   /**
    * request, work; end, tell me.
    */
   def receive = {
-    case request: Request => {
+    case request: HttpRequest => {
       val index = Random.nextInt(threadCount)
-      states(index) = Status.Working
+      logger.info("Worker " + index + " has a new work to do")
       workers(index) ! (request, index)
     }
-    case (Constant.endMessage, index: Int) => {
-      states(index) = Status.Done
-      if (IsAllDone()) {
-        // TODO send to scheduler
-        engine ! Constant.endMessage
-      }
+    case Constant.poisonMessage => {
+      workers.foreach(worker => worker.tell(PoisonPill.getInstance, self))
+      self.tell(PoisonPill.getInstance, self)
     }
     case _ => {
       logger.warn("[DownloadManager]-unexpected message")
     }
-  }
-
-  def IsAllDone(): Boolean = {
-    states.forall { ele => ele == Status.Done }
   }
 }

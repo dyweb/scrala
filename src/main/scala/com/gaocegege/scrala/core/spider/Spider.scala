@@ -13,6 +13,8 @@ trait Spider {
   def begin(): Unit
   def request(url: String, callback: (HttpResponse) => Unit): Unit
 
+  def poison(): Unit
+
   val logger = Logger(LoggerFactory.getLogger("spider"))
   private[this] var _threadCount = 4
   def threadCount: Int = _threadCount;

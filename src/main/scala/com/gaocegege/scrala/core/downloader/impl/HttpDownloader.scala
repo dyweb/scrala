@@ -18,8 +18,8 @@ class HttpDownloader extends DefaultHttpClient with Actor with Downloader {
 
   def receive = {
     case (request: HttpRequest, index: Int) => {
+      logger.info("Worker " + index + " working on " + request)
       download(request)
-      sender() ! (Constant.endMessage, index)
     }
     case _ => logger.info("[Downloader]-unexpected message")
   }
@@ -30,6 +30,7 @@ class HttpDownloader extends DefaultHttpClient with Actor with Downloader {
     try {
       response = new HttpResponse(httpClient.execute(request.request))
       logger.debug("[Downloading]-callback")
+      // call back in the downloader
       request.callback(response)
       val entity = response.getResponse().getEntity()
       EntityUtils.consume(entity)

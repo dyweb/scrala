@@ -1,7 +1,6 @@
+package com.gaocegege.scrala.example
+
 import com.gaocegege.scrala.core.spider.impl.DefaultSpider
-import com.gaocegege.scrala.core.common.response.Response
-import java.io.BufferedReader
-import java.io.InputStreamReader
 import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 import org.json4s._

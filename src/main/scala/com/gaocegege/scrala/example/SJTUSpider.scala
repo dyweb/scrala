@@ -43,6 +43,7 @@ class SJTUSpider extends DefaultSpider {
     writer.write((json \ "login").values + "\t" + (json \ "home_url").values + "\t" + (json \ "followers").values + "\n")
     writer.close()
     println((json \ "login") + (json \ "followers").toString() + "\n")
+    poison()
   }
 }
 

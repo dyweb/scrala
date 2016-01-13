@@ -19,7 +19,7 @@ import akka.actor.PoisonPill
  */
 class DownloadManager(engine: ActorRef, val threadCount: Int = 4) extends Actor {
 
-  private val logger = Logger(LoggerFactory.getLogger("downloadmanager"))
+  private val logger = Logger(LoggerFactory getLogger ("downloadmanager"))
 
   private var counter = 0
 
@@ -27,7 +27,7 @@ class DownloadManager(engine: ActorRef, val threadCount: Int = 4) extends Actor 
   private val workers: mutable.ListBuffer[ActorRef] = new mutable.ListBuffer[ActorRef]()
 
   for (i <- 1 to threadCount) {
-    workers.append(context.actorOf(Props[HttpDownloader], "worker-" + i.toString()))
+    workers append (context actorOf (Props[HttpDownloader], "worker-" + (i toString)))
   }
 
   /**
@@ -35,20 +35,20 @@ class DownloadManager(engine: ActorRef, val threadCount: Int = 4) extends Actor 
    */
   def receive = {
     case request: HttpRequest => {
-      val index = Random.nextInt(threadCount)
-      logger.info("Worker " + index + " has a new work to do")
+      val index = Random nextInt (threadCount)
+      logger info ("Worker " + index + " has a new work to do")
       counter = counter - 1
-      workers(index) ! (request, index)
+      workers(index) tell ((request, index), self)
     }
     case Constant.workDownMessage => {
-      logger.info("Worker down")
+      logger info ("Worker down")
       counter = counter + 1
       if (counter == 0) {
         engine tell (Constant.workDownMessage, self)
       }
     }
     case _ => {
-      logger.warn("unexpected message")
+      logger warn ("unexpected message")
     }
   }
 }

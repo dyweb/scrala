@@ -18,28 +18,28 @@ class HttpDownloader extends DefaultHttpClient with Actor with Downloader {
 
   def receive = {
     case (request: HttpRequest, index: Int) => {
-      logger.info("Worker " + index + " working on " + request)
+      logger info ("Worker " + index + " working on " + request)
       download(request)
       sender tell (Constant.workDownMessage, self)
     }
-    case _ => logger.info("[Downloader]-unexpected message")
+    case _ => logger info ("[Downloader]-unexpected message")
   }
 
   def download(request: HttpRequest): Response = {
-    logger.debug("[Downloading]-Url: " + request.request.getURI)
+    logger debug ("Url: " + ((request request) getURI))
     var response: HttpResponse = new HttpResponse(false)
     try {
-      response = new HttpResponse(httpClient.execute(request.request))
-      logger.debug("[Downloading]-callback")
+      response = new HttpResponse(httpClient execute (request.request))
+      logger debug ("callback")
       // call back in the downloader
-      request.callback(response)
-      val entity = response.getResponse().getEntity()
-      EntityUtils.consume(entity)
+      request callback (response)
+      val entity = ((response getResponse) getEntity)
+      EntityUtils consume (entity)
       response
     } catch {
       case e: ClientProtocolException => {
-        logger.error("[Downloading]-error: ClientProtocolException")
-        logger.error(e.printStackTrace().toString())
+        logger error ("error: ClientProtocolException")
+        logger error ((e printStackTrace) toString)
         new HttpResponse(false)
       }
     }

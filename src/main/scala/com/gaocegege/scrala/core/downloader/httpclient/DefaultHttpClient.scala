@@ -8,5 +8,5 @@ import org.apache.http.client.methods.HttpUriRequest
  * @author gaoce
  */
 class DefaultHttpClient() {
-  val httpClient = HttpClients.createDefault()
+  val httpClient = HttpClients createDefault
 }

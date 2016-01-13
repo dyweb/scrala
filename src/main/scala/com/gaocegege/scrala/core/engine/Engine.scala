@@ -19,52 +19,45 @@ import akka.actor.PoisonPill
  */
 class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
 
-  private val filter = spider.filter
+  private val filter = spider filter
 
-  private val logger = Logger(LoggerFactory.getLogger("Engine"))
+  private val logger = Logger(LoggerFactory getLogger ("Engine"))
 
-  logger.info("thread count-" + spider.workerCount)
+  logger info ("thread count-" + (spider workerCount))
 
-  private val downloaderManager: ActorRef = context.actorOf(Props(new DownloadManager(self, spider.workerCount)), "downloadermanager")
+  private val downloaderManager: ActorRef = context actorOf (Props(new DownloadManager(self, spider workerCount)), "downloadermanager")
 
   def receive = {
     // request from the spider class
     case (url: String, callback: Function1[HttpResponse, Unit]) => {
-      logger.info("[Request-create]-Url: " + url)
-      if (filter.filter(url)) {
-        scheduler.push(new HttpRequest(new HttpGet(url), callback))
-        self ! Constant.resumeMessage
+      logger info ("[Request-create]-Url: " + url)
+      if (filter filter (url)) {
+        scheduler push (new HttpRequest(new HttpGet(url), callback))
+        self tell (Constant resumeMessage, self)
       }
     }
-    case Constant.startMessage => {
+    case (Constant.startMessage) => {
       // get all allowable urls
-      for (url <- spider.startUrl) {
-        if (filter.filter(url)) {
-          scheduler.push(new HttpRequest(new HttpGet(url), spider.parse))
+      for (url <- (spider startUrl)) {
+        if (filter filter (url)) {
+          scheduler push (new HttpRequest(new HttpGet(url), spider parse))
         }
       }
-      for (i <- 1 to scheduler.count()) {
-        // One downloader situation:
-        // pop the element, so in this message, the scheduler is empty,
-        // and dowloaderManager dispatch the work, when it's done,
-        // THE BAD THING happened, everytime the downloader has done,
-        // it will send end message to engine, and the scheduler is always
-        // empty, then will call stop multi times.
-        // FXXK THE ASYNCHRONOUS!!!!!!!!!!!
-        downloaderManager ! scheduler.pop()
+      for (i <- 1 to (scheduler count)) {
+        downloaderManager tell (scheduler pop, self)
       }
     }
-    case Constant.resumeMessage => {
-      logger.debug("resume-count of scheduler: " + scheduler.count())
-      for (i <- 1 to scheduler.count()) {
-        downloaderManager ! scheduler.pop()
+    case (Constant.resumeMessage) => {
+      logger debug ("resume-count of scheduler: " + (scheduler count))
+      for (i <- 1 to (scheduler count)) {
+        downloaderManager tell (scheduler pop, self)
       }
     }
-    case Constant.workDownMessage => {
-      if (scheduler.count == 0) {
-        context.system.shutdown
+    case (Constant.workDownMessage) => {
+      if ((scheduler count) == 0) {
+        (context system) shutdown
       }
     }
-    case _ => logger.warn("unexpected message")
+    case _ => logger warn ("unexpected message")
   }
 }

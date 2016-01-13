@@ -26,19 +26,10 @@ abstract class DefaultSpider extends Spider {
    * push request to the scheduler
    */
   def request(url: String, callback: (HttpResponse) => Unit): Unit = {
-    engine ! (url, callback)
-  }
-
-  /**
-   * Push Poisons to the scheduler
-   * PS: Poison may be more than 1, but only one of them will work.
-   */
-  def poison(): Unit = {
-    engine ! Constant.poisonMessage
+    engine tell ((url, callback), engine)
   }
 
   def begin(): Unit = {
-    engine ! Constant.startMessage
-    system.awaitTermination()
+    engine tell (Constant.startMessage, engine)
   }
 }

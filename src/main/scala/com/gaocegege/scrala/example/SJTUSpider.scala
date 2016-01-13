@@ -22,34 +22,30 @@ class SJTUSpider extends DefaultSpider {
   // name of shanghai jiao tong univ
   val names = List[String]("shanghai+jiaotong", "shanghai+jiao+tong", "上海交通大学", "上海交大", "SJTU");
 
-  def startUrl = names.map { name => getUrlByLocation(name) }
+  def startUrl = names map { name => getUrlByLocation(name) }
 
   def parse(response: HttpResponse): Unit = {
-    val json = JsonMethods.parse(response.getContent())
+    val json = JsonMethods parse (response getContent)
     (for {
       JObject(child) <- json
       JField("url", JString(url)) <- child
-    } yield url).foreach {
-      (url: String) =>
-        {
-          request(url, getUserDetail)
-        }
+    } yield url) foreach {
+      (url: String) => request(url, getUserDetail)
     }
   }
 
   def getUserDetail(response: HttpResponse): Unit = {
-    val json = JsonMethods.parse(response.getContent())
+    val json = JsonMethods parse (response getContent)
     val writer = new FileWriter("dump.txt", true)
-    writer.write((json \ "login").values + "\t" + (json \ "home_url").values + "\t" + (json \ "followers").values + "\n")
-    writer.close()
-    println((json \ "login") + (json \ "followers").toString() + "\n")
-    poison()
+    writer write (((json \ "login") values) + "\t" + ((json \ "home_url") values) + "\t" + ((json \ "followers") values) + "\n")
+    writer close ()
+    println((json \ "login") + ((json \ "followers") toString) + "\n")
   }
 }
 
 object Main {
   def main(args: Array[String]) {
     val test = new SJTUSpider
-    test.begin
+    test begin
   }
 }

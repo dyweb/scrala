@@ -11,7 +11,7 @@ import com.gaocegege.scrala.core.common.request.impl.HttpRequest
  * @author gaoce
  */
 trait Downloader {
-  val logger = Logger(LoggerFactory.getLogger("downloader"))
+  val logger = Logger(LoggerFactory getLogger ("downloader"))
 
   def download(request: HttpRequest): Response
 }

@@ -13,14 +13,14 @@ class DefaultScheduler extends Scheduler {
   val queue: mutable.Queue[HttpRequest] = new mutable.Queue[HttpRequest]()
 
   def push(request: HttpRequest): Unit = {
-    queue.enqueue(request)
+    queue enqueue (request)
   }
 
   def pop(): HttpRequest = {
-    queue.dequeue
+    queue dequeue
   }
 
   def count(): Int = {
-    queue.size
+    queue size
   }
 }

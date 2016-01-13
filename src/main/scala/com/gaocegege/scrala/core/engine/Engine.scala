@@ -21,9 +21,9 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
 
   private val filter = spider.filter
 
-  private val logger = Logger(LoggerFactory.getLogger("engine"))
+  private val logger = Logger(LoggerFactory.getLogger("Engine"))
 
-  logger.info("[thread-count]-" + spider.threadCount)
+  logger.info("thread count-" + spider.threadCount)
 
   private val downloaderManager: ActorRef = context.actorOf(Props(new DownloadManager(self, spider.threadCount)), "downloadermanager")
 
@@ -35,11 +35,6 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
         scheduler.push(new HttpRequest(new HttpGet(url), callback))
         self ! Constant.resumeMessage
       }
-    }
-    // push the poison to the scheduler
-    case Constant.poisonMessage => {
-      scheduler.push(new HttpRequest(new HttpGet("Posion"), null, true))
-      self ! Constant.resumeMessage
     }
     case Constant.startMessage => {
       // get all allowable urls
@@ -60,18 +55,16 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
       }
     }
     case Constant.resumeMessage => {
-      logger.debug("[Engine]-resume-count of scheduler: " + scheduler.count())
+      logger.debug("resume-count of scheduler: " + scheduler.count())
       for (i <- 1 to scheduler.count()) {
-        val req = scheduler.pop()
-        if (req.isPoisonPill) {
-          logger.info("poison to you, my dear")
-          downloaderManager ! Constant.poisonMessage
-          self.tell(PoisonPill.getInstance, self)
-        } else {
-          downloaderManager ! req
-        }
+        downloaderManager ! scheduler.pop()
       }
     }
-    case _ => logger.warn("[Engine]-unexpected message")
+    case Constant.workDownMessage => {
+      if (scheduler.count == 0) {
+        context.system.shutdown
+      }
+    }
+    case _ => logger.warn("unexpected message")
   }
 }

@@ -8,4 +8,6 @@ object Constant {
   final val resumeMessage = "resume"
 
   final val poisonMessage = "poison"
+
+  final val workDownMessage = "workdown"
 }

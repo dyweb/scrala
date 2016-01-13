@@ -21,6 +21,8 @@ class DownloadManager(engine: ActorRef, val threadCount: Int = 4) extends Actor 
 
   private val logger = Logger(LoggerFactory.getLogger("downloadmanager"))
 
+  private var counter = 0
+
   /** children */
   private val workers: mutable.ListBuffer[ActorRef] = new mutable.ListBuffer[ActorRef]()
 
@@ -35,14 +37,18 @@ class DownloadManager(engine: ActorRef, val threadCount: Int = 4) extends Actor 
     case request: HttpRequest => {
       val index = Random.nextInt(threadCount)
       logger.info("Worker " + index + " has a new work to do")
+      counter = counter - 1
       workers(index) ! (request, index)
     }
-    case Constant.poisonMessage => {
-      workers.foreach(worker => worker.tell(PoisonPill.getInstance, self))
-      self.tell(PoisonPill.getInstance, self)
+    case Constant.workDownMessage => {
+      logger.info("Worker down")
+      counter = counter + 1
+      if (counter == 0) {
+        engine tell (Constant.workDownMessage, self)
+      }
     }
     case _ => {
-      logger.warn("[DownloadManager]-unexpected message")
+      logger.warn("unexpected message")
     }
   }
 }

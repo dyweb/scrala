@@ -20,6 +20,7 @@ class HttpDownloader extends DefaultHttpClient with Actor with Downloader {
     case (request: HttpRequest, index: Int) => {
       logger.info("Worker " + index + " working on " + request)
       download(request)
+      sender tell (Constant.workDownMessage, self)
     }
     case _ => logger.info("[Downloader]-unexpected message")
   }

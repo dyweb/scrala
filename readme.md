@@ -3,6 +3,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/563bbcd12d874610bca7313abe6e6fdd)](https://www.codacy.com/app/gaocegege/scrala)
 [![Build Status](https://travis-ci.org/gaocegege/scrala.svg?branch=master)](https://travis-ci.org/gaocegege/scrala)
 ![License](https://img.shields.io/pypi/l/Django.svg)
+[![](https://jitpack.io/v/gaocegege/scrala.svg)](https://jitpack.io/#gaocegege/scrala)
 [![Stories in Ready](https://badge.waffle.io/gaocegege/scrala.png?label=ready&title=Ready)](https://waffle.io/gaocegege/scrala)
 [![Join the chat at https://gitter.im/gaocegege/scrala](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gaocegege/scrala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -18,7 +19,7 @@ scrala is a web crawling framework for scala, which is inspired by [scrapy](http
 
 **Step 2.** Add the dependency in the form
 
-	libraryDependencies += "com.github.gaocegege" % "scrala" % "0.1.3"
+	libraryDependencies += "com.github.gaocegege" % "scrala" % "0.1.4"
 
 ### normal way
 

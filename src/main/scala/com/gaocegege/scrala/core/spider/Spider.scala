@@ -10,10 +10,16 @@ import com.gaocegege.scrala.core.middleware.filter.Filter
  * Spider Trait
  */
 trait Spider {
+  /** the start url */
   def startUrl: List[String]
+  /** middleware-filter */
   def filter: Filter = new DefaultFilter
+  def delay: Int = 0
+  /** main function */
   def parse(response: HttpResponse): Unit
+  /** run the engine */
   def begin(): Unit
+  /** create a new request */
   def request(url: String, callback: (HttpResponse) => Unit): Unit
 
   val logger = Logger(LoggerFactory getLogger ("spider"))

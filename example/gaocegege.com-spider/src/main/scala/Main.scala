@@ -12,20 +12,20 @@ class TestSpider extends DefaultSpider {
   def startUrl = List[String]("http://www.gaocegege.com/resume")
 
   def parse(response: HttpResponse): Unit = {
-    val links = response.getContentParser().select("a")
+    val links = (response getContentParser) select ("a")
     for (i <- 0 to links.size() - 1) {
-      request(links.get(i).attr("href"), printIt)
+      request(((links get (i)) attr ("href")), printIt)
     }
   }
 
   def printIt(response: HttpResponse): Unit = {
-    println(response.getContentParser().title())
+    println((response getContentParser) title)
   }
 }
 
 object Main {
   def main(args: Array[String]) {
     val test = new TestSpider
-    test.begin
+    test begin
   }
 }

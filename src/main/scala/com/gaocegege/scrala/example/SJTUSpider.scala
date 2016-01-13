@@ -13,7 +13,9 @@ import java.io.FileWriter
  */
 class SJTUSpider extends DefaultSpider {
 
-  override var workerCount: Int = 4
+  override def workerCount = 1
+
+  override def delay = 100000
 
   def getUrlByLocation(location: String): String = {
     "https://api.github.com/search/users?q=location:%22" + location + "%22"
@@ -43,9 +45,9 @@ class SJTUSpider extends DefaultSpider {
   }
 }
 
-object Main {
-  def main(args: Array[String]) {
-    val test = new SJTUSpider
-    test begin
-  }
-}
+//object Main {
+//  def main(args: Array[String]) {
+//    val test = new SJTUSpider
+//    test begin
+//  }
+//}

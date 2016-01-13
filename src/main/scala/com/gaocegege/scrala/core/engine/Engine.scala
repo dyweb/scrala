@@ -21,6 +21,8 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
 
   private val filter = spider filter
 
+  private val delay = spider delay
+
   private val logger = Logger(LoggerFactory getLogger ("Engine"))
 
   logger info ("thread count-" + (spider workerCount))

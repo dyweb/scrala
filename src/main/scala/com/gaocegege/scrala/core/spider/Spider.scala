@@ -14,7 +14,10 @@ trait Spider {
   def startUrl: List[String]
   /** middleware-filter */
   def filter: Filter = new DefaultFilter
+  /** delay */
   def delay: Int = 0
+  /** worker actor number */
+  def workerCount = 4
   /** main function */
   def parse(response: HttpResponse): Unit
   /** run the engine */
@@ -23,10 +26,5 @@ trait Spider {
   def request(url: String, callback: (HttpResponse) => Unit): Unit
 
   val logger = Logger(LoggerFactory getLogger ("spider"))
-
-  // for inherience, don't rewrite these, trust me
-  private[this] var realWorker = 4
-  def workerCount: Int = realWorker;
-  def workerCount_=(v: Int) { realWorker = v; };
 
 }

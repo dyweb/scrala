@@ -4,8 +4,6 @@ lazy val root = (project in file(".")).
     organization := "com.gaocegege",
     version := "0.1",
     scalaVersion := "2.11.6",
-
-    libraryDependencies += "com.github.gaocegege" % "scrala" % "0.1"
+    resolvers += "jitpack" at "https://jitpack.io",
+    libraryDependencies += "com.github.gaocegege" % "scrala" % "0.1.4"
   )
-
-resolvers += "jitpack" at "https://jitpack.io"

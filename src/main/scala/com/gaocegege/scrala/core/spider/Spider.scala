@@ -16,8 +16,8 @@ trait Spider {
   def poison(): Unit
 
   val logger = Logger(LoggerFactory.getLogger("spider"))
-  private[this] var _threadCount = 4
-  def threadCount: Int = _threadCount;
-  def threadCount_=(v: Int) { _threadCount = v; };
+  private[this] var realWorker = 4
+  def workerCount: Int = realWorker;
+  def workerCount_=(v: Int) { realWorker = v; };
 
 }

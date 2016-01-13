@@ -23,9 +23,9 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
 
   private val logger = Logger(LoggerFactory.getLogger("Engine"))
 
-  logger.info("thread count-" + spider.threadCount)
+  logger.info("thread count-" + spider.workerCount)
 
-  private val downloaderManager: ActorRef = context.actorOf(Props(new DownloadManager(self, spider.threadCount)), "downloadermanager")
+  private val downloaderManager: ActorRef = context.actorOf(Props(new DownloadManager(self, spider.workerCount)), "downloadermanager")
 
   def receive = {
     // request from the spider class

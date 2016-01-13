@@ -13,7 +13,7 @@ import java.io.FileWriter
  */
 class SJTUSpider extends DefaultSpider {
 
-  override var threadCount: Int = 1
+  override var workerCount: Int = 4
 
   def getUrlByLocation(location: String): String = {
     "https://api.github.com/search/users?q=location:%22" + location + "%22"

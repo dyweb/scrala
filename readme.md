@@ -11,7 +11,27 @@ scrala is a web crawling framework for scala, which is inspired by [scrapy](http
 
 ## install
 
-### easy way
+### the docker way
+
+[![](https://badge.imagelayers.io/gaocegege/scrala:latest.svg)](https://imagelayers.io/?images=gaocegege/scrala:latest 'Get your own badge on imagelayers.io')
+
+[gaocegege/scrala in dockerhub](https://hub.docker.com/r/gaocegege/scrala/)
+
+#### Create a Dockerfile in your project.
+
+```
+FROM gaocegege/scrala:latest
+
+// COPY the build.sbt and the src to the container
+```
+
+#### Run a single command in docker
+
+```
+docker run -v <your src>:/app/src -v <your ivy2 directory>:/root/.ivy2  gaocegege/scrala
+```
+
+### the sbt way
 
 **Step 1.** Add it in your build.sbt at the end of resolvers:
 

@@ -7,7 +7,7 @@ import com.gaocegege.scrala.core.middleware.filter.impl.DefaultFilter
 import com.gaocegege.scrala.core.middleware.filter.Filter
 
 /**
- * Spider Trait
+ * Spider interface
  */
 trait Spider {
   /** the start url */

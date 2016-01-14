@@ -9,9 +9,7 @@ import scala.util.Random
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
 import com.gaocegege.scrala.core.common.util.Constant
-import com.gaocegege.scrala.core.engine.manager.status.Status
 import com.gaocegege.scrala.core.common.request.impl.HttpRequest
-import akka.actor.PoisonPill
 
 /**
  * Downloader manager
@@ -19,11 +17,12 @@ import akka.actor.PoisonPill
  */
 class DownloadManager(engine: ActorRef, val threadCount: Int = 4) extends Actor {
 
-  private val logger = Logger(LoggerFactory getLogger ("downloadmanager"))
+  private val logger = Logger(LoggerFactory getLogger ("Downloadmanager"))
 
+  /** work down count */
   private var counter = 0
 
-  /** children */
+  /** worker actor */
   private val workers: mutable.ListBuffer[ActorRef] = new mutable.ListBuffer[ActorRef]()
 
   for (i <- 1 to threadCount) {
@@ -37,18 +36,19 @@ class DownloadManager(engine: ActorRef, val threadCount: Int = 4) extends Actor 
     case request: HttpRequest => {
       val index = Random nextInt (threadCount)
       logger info ("Worker " + index + " has a new work to do")
+      // if get a new job to do,
       counter = counter - 1
       workers(index) tell ((request, index), self)
     }
     case Constant.workDownMessage => {
-      logger info ("Worker down")
+      // if a job has done,
       counter = counter + 1
       if (counter == 0) {
         engine tell (Constant.workDownMessage, self)
       }
     }
     case _ => {
-      logger warn ("unexpected message")
+      logger warn ("Unexpected message")
     }
   }
 }

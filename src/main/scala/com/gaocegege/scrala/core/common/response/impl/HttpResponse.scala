@@ -6,15 +6,19 @@ import org.jsoup.Jsoup
 import com.gaocegege.scrala.core.common.util.ConvertTool
 import org.jsoup.nodes.Document
 
+/**
+ * Response class
+ * TODO: the code is in bad stayle
+ */
 class HttpResponse extends Response {
+
+  private var httpResponse: CloseableHttpResponse = _
 
   /** content of the response */
   private lazy val content = ConvertTool.convertResponse2String(httpResponse)
 
   /** content parser */
   private lazy val contentParser: Document = Jsoup.parse(content)
-
-  private var httpResponse: CloseableHttpResponse = _
 
   private var isSuccess = true
 

@@ -22,7 +22,7 @@ class HttpDownloader extends DefaultHttpClient with Actor with Downloader {
       download(request)
       sender tell (Constant.workDownMessage, self)
     }
-    case _ => logger info ("[Downloader]-unexpected message")
+    case _ => logger info ("Unexpected message")
   }
 
   def download(request: HttpRequest): Response = {
@@ -38,7 +38,7 @@ class HttpDownloader extends DefaultHttpClient with Actor with Downloader {
       response
     } catch {
       case e: ClientProtocolException => {
-        logger error ("error: ClientProtocolException")
+        logger error ("Error: ClientProtocolException")
         logger error ((e printStackTrace) toString)
         new HttpResponse(false)
       }

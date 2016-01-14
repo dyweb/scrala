@@ -25,14 +25,14 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
 
   private val logger = Logger(LoggerFactory getLogger ("Engine"))
 
-  logger info ("thread count-" + (spider workerCount))
+  logger info ("Worker count-" + (spider workerCount))
 
   private val downloaderManager: ActorRef = context actorOf (Props(new DownloadManager(self, spider workerCount)), "downloadermanager")
 
   def receive = {
     // request from the spider class
     case (url: String, callback: Function1[HttpResponse, Unit]) => {
-      logger info ("[Request-create]-Url: " + url)
+      logger info ("Request created, the url is " + url)
       if (filter filter (url)) {
         scheduler push (new HttpRequest(new HttpGet(url), callback))
         self tell (Constant resumeMessage, self)
@@ -50,7 +50,6 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
       }
     }
     case (Constant.resumeMessage) => {
-      logger debug ("resume-count of scheduler: " + (scheduler count))
       for (i <- 1 to (scheduler count)) {
         downloaderManager tell (scheduler pop, self)
       }
@@ -60,6 +59,6 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
         (context system) shutdown
       }
     }
-    case _ => logger warn ("unexpected message")
+    case _ => logger warn ("Unexpected message")
   }
 }

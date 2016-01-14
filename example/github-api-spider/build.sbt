@@ -1,6 +1,6 @@
 lazy val root = (project in file(".")).
   settings(
-    name := "scrala-example",
+    name := "scrala-example-github",
     version := "1.0",
     scalaVersion := "2.11.7",
     resolvers += "jitpack" at "https://jitpack.io",

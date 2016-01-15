@@ -12,28 +12,28 @@ import org.jsoup.nodes.Document
  */
 class HttpResponse extends Response {
 
-  private var httpResponse: CloseableHttpResponse = _
+  private var httpResponse: Option[CloseableHttpResponse] = None
 
   /** content of the response */
-  private lazy val content = ConvertTool.convertResponse2String(httpResponse)
+  private lazy val content = ConvertTool.convertResponse2String(httpResponse get)
 
   /** content parser */
   private lazy val contentParser: Document = Jsoup.parse(content)
 
   private var isSuccess = true
 
-  def this(_isSuccess: Boolean) = {
+  def this(isSuccessParam: Boolean) = {
     this()
-    this.isSuccess = _isSuccess
+    this.isSuccess = isSuccess
   }
 
-  def this(_httpResponse: CloseableHttpResponse) = {
+  def this(httpResponseParam: CloseableHttpResponse) = {
     this(true)
-    httpResponse = _httpResponse
+    httpResponse = Some(httpResponseParam)
   }
 
   def getResponse(): CloseableHttpResponse = {
-    httpResponse
+    httpResponse get
   }
 
   def getContentParser(): Document = {

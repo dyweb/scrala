@@ -9,6 +9,9 @@ import akka.actor.Actor
 import com.gaocegege.scrala.core.common.request.impl.HttpRequest
 import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 import com.gaocegege.scrala.core.common.util.Constant
+import scala.util.Try
+import scala.util.Success
+import scala.util.Failure
 
 /**
  * Http downloader
@@ -28,20 +31,20 @@ class HttpDownloader extends DefaultHttpClient with Actor with Downloader {
   def download(request: HttpRequest): Response = {
     logger debug ("Url: " + ((request request) getURI))
     var response: HttpResponse = new HttpResponse(false)
-    try {
-      response = new HttpResponse(httpClient execute (request.request))
-      logger debug ("callback")
-      // call back in the downloader
-      request callback (response)
-      val entity = ((response getResponse) getEntity)
-      EntityUtils consume (entity)
-      response
-    } catch {
-      case e: ClientProtocolException => {
-        logger error ("Error: ClientProtocolException")
-        logger error ((e printStackTrace) toString)
-        new HttpResponse(false)
+    Try(httpClient execute (request.request)) match {
+      case Success(rawResponse) => {
+        response = new HttpResponse(rawResponse)
+      }
+      case Failure(ex) => {
+        logger error (s"Problem rendering URL content: ${ex.getMessage}")
+        return response
       }
     }
+    logger debug ("callback")
+    // call back in the downloader
+    request callback (response)
+    val entity = ((response getResponse) getEntity)
+    EntityUtils consume (entity)
+    response
   }
 }

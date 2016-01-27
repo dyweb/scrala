@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-dark.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Scrala by gaocegege</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Scrala</h1>
+        <h2>Scala crawler(spider) framework, inspired by scrapy</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/gaocegege/scrala/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/gaocegege/scrala/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/gaocegege/scrala" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a id="scrala" class="anchor" href="#scrala" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>scrala</h1>
+
+<p><a href="https://www.codacy.com/app/gaocegege/scrala"><img src="https://api.codacy.com/project/badge/grade/563bbcd12d874610bca7313abe6e6fdd" alt="Codacy Badge"></a>
+<a href="https://travis-ci.org/gaocegege/scrala"><img src="https://travis-ci.org/gaocegege/scrala.svg?branch=master" alt="Build Status"></a>
+<img src="https://img.shields.io/pypi/l/Django.svg" alt="License">
+<a href="https://jitpack.io/#gaocegege/scrala"><img src="https://jitpack.io/v/gaocegege/scrala.svg" alt="scrala published"></a>
+<a href="https://hub.docker.com/r/gaocegege/scrala/"><img src="https://img.shields.io/badge/docker-supported-blue.svg" alt="Docker Supported"></a>
+<a href="https://gitter.im/gaocegege/scrala?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the chat at https://gitter.im/gaocegege/scrala"></a></p>
+
+<p>scrala is a web crawling framework for scala, which is inspired by <a href="https://github.com/scrapy/scrapy">scrapy</a>.</p>
+
+<h2>
+<a id="install" class="anchor" href="#install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>install</h2>
+
+<h3>
+<a id="the-docker-way" class="anchor" href="#the-docker-way" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>the docker way</h3>
+
+<p><a href="https://imagelayers.io/?images=gaocegege/scrala:latest" title="Get your own badge on imagelayers.io"><img src="https://badge.imagelayers.io/gaocegege/scrala:latest.svg" alt=""></a></p>
+
+<p><a href="https://hub.docker.com/r/gaocegege/scrala/">gaocegege/scrala in dockerhub</a></p>
+
+<h4>
+<a id="create-a-dockerfile-in-your-project" class="anchor" href="#create-a-dockerfile-in-your-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Create a Dockerfile in your project.</h4>
+
+<pre><code>FROM gaocegege/scrala:latest
+
+// COPY the build.sbt and the src to the container
+</code></pre>
+
+<h4>
+<a id="run-a-single-command-in-docker" class="anchor" href="#run-a-single-command-in-docker" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Run a single command in docker</h4>
+
+<pre><code>docker run -v &lt;your src&gt;:/app/src -v &lt;your ivy2 directory&gt;:/root/.ivy2  gaocegege/scrala
+</code></pre>
+
+<h3>
+<a id="the-sbt-way" class="anchor" href="#the-sbt-way" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>the sbt way</h3>
+
+<p><strong>Step 1.</strong> Add it in your build.sbt at the end of resolvers:</p>
+
+<pre><code>resolvers += "jitpack" at "https://jitpack.io"
+</code></pre>
+
+<p><strong>Step 2.</strong> Add the dependency</p>
+
+<pre><code>libraryDependencies += "com.github.gaocegege" % "scrala" % "0.1.5"
+</code></pre>
+
+<h3>
+<a id="normal-way" class="anchor" href="#normal-way" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>normal way</h3>
+
+<pre><code>git clone https://github.com/gaocegege/scrala.git
+cd ./scrala
+sbt assembly
+</code></pre>
+
+<p>You will get the jar in <code>./target/scala-&lt;version&gt;/</code>.</p>
+
+<h2>
+<a id="example" class="anchor" href="#example" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>example</h2>
+
+<pre><code>import com.gaocegege.scrala.core.spider.impl.DefaultSpider
+import com.gaocegege.scrala.core.common.response.Response
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import com.gaocegege.scrala.core.common.response.impl.HttpResponse
+import com.gaocegege.scrala.core.common.response.impl.HttpResponse
+
+class TestSpider extends DefaultSpider {
+  def startUrl = List[String]("http://www.gaocegege.com/resume")
+
+  def parse(response: HttpResponse): Unit = {
+    val links = (response getContentParser) select ("a")
+    for (i &lt;- 0 to links.size() - 1) {
+      request(((links get (i)) attr ("href")), printIt)
+    }
+  }
+
+  def printIt(response: HttpResponse): Unit = {
+    println((response getContentParser) title)
+  }
+}
+
+object Main {
+  def main(args: Array[String]) {
+    val test = new TestSpider
+    test begin
+  }
+}
+</code></pre>
+
+<p>Just like the scrapy, what you need to do is define a <code>startUrl</code> to tell me where to start, and override <code>parse(...)</code> to parse the response of the startUrl. And <code>request(...)</code> function is like <code>yield scrapy.Request(...)</code> in scrapy.</p>
+
+<p>You can get the example project in the <code>./example/</code></p>
+
+<h2>
+<a id="for-developer" class="anchor" href="#for-developer" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>for developer</h2>
+
+<h3>
+<a id="roadmap" class="anchor" href="#roadmap" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>roadmap</h3>
+
+<p>Next version is 0.2, which is also a dev version</p>
+
+<ol>
+<li>keep the log output simple and stupid</li>
+<li>add tests to keep the multi thread downloader high performance </li>
+<li>add new feature: rules in the spider</li>
+</ol>
+      </section>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-54253120-3");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>

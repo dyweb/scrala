@@ -10,6 +10,10 @@ import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
 import com.gaocegege.scrala.core.common.util.Constant
 import com.gaocegege.scrala.core.common.request.impl.HttpRequest
+import com.gaocegege.scrala.core.common.response.impl.HttpResponse
+import org.apache.http.util.EntityUtils
+import com.sun.org.apache.xpath.internal.operations.String
+import java.net.URI
 
 /**
  * Downloader manager
@@ -29,6 +33,9 @@ class DownloadManager(engine: ActorRef, val threadCount: Int = 4) extends Actor 
     workers append (context actorOf (Props[HttpDownloader], "worker-" + (i toString)))
   }
 
+  /** call back info map */
+  private var callBackMap: mutable.Map[URI, (HttpResponse) => Unit] = new mutable.HashMap[URI, (HttpResponse) => Unit]()
+
   /**
    * request, work; end, tell me.
    */
@@ -36,13 +43,29 @@ class DownloadManager(engine: ActorRef, val threadCount: Int = 4) extends Actor 
     case request: HttpRequest => {
       val index = Random nextInt (threadCount)
       logger info ("Worker " + index + " has a new work to do")
+
+      // push callback function to map
+      callBackMap += (((request request) getURI) -> request.callback)
+
       // if get a new job to do,
       counter = counter - 1
+
+      // tell the worker to do
       workers(index) tell ((request, index), self)
     }
-    case Constant.workDownMessage => {
+    case (Constant.workDownMessage, uri: URI, response: HttpResponse) => {
       // if a job has done,
       counter = counter + 1
+
+      // do the callback function
+      if (!(response getStatus)) {
+        logger.error("Error getting the response for " + uri)
+      } else {
+        callBackMap(uri)(response)
+        val entity = ((response getResponse) getEntity)
+        EntityUtils consume (entity)
+      }
+
       if (counter == 0) {
         engine tell (Constant.workDownMessage, self)
       }

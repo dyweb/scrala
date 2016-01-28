@@ -21,30 +21,26 @@ class HttpDownloader extends DefaultHttpClient with Actor with Downloader {
 
   def receive = {
     case (request: HttpRequest, index: Int) => {
-      logger info ("Worker " + index + " working on " + request)
-      download(request)
-      sender tell (Constant.workDownMessage, self)
+      logger info ("Worker " + index + " working on " + ((request request) getURI))
+      val response = download(request)
+      sender tell ((Constant.workDownMessage, ((request request) getURI), response), self)
     }
     case _ => logger info ("Unexpected message")
   }
 
   def download(request: HttpRequest): Response = {
     logger debug ("Url: " + ((request request) getURI))
-    var response: HttpResponse = new HttpResponse(false)
+    var response: HttpResponse = null
     Try(httpClient execute (request.request)) match {
       case Success(rawResponse) => {
         response = new HttpResponse(rawResponse)
+        response
       }
       case Failure(ex) => {
         logger error (s"Problem rendering URL content: ${ex.getMessage}")
-        return response
+        response = new HttpResponse(false)
+        response
       }
     }
-    logger debug ("callback")
-    // call back in the downloader
-    request callback (response)
-    val entity = ((response getResponse) getEntity)
-    EntityUtils consume (entity)
-    response
   }
 }

@@ -24,7 +24,7 @@ class HttpResponse extends Response {
 
   def this(isSuccessParam: Boolean) = {
     this()
-    this.isSuccess = isSuccess
+    this.isSuccess = isSuccessParam
   }
 
   def this(httpResponseParam: CloseableHttpResponse) = {
@@ -42,5 +42,9 @@ class HttpResponse extends Response {
 
   def getContent(): String = {
     content
+  }
+
+  def getStatus(): Boolean = {
+    isSuccess
   }
 }

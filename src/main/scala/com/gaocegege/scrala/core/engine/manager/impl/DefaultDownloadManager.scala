@@ -41,11 +41,17 @@ class DefaultDownloadManager(engine: ActorRef, val threadCount: Int = 4) extends
       if (!(response isSuccess)) {
         logger.error("Error getting the response for " + uri)
       } else {
+        // callback with arguments
         callBackMap(uri)(response)
-        val entity = (((response httpResponse) get) getEntity)
-        EntityUtils consume (entity)
+
+        // consume the response
+        (response httpResponse) match {
+          case Some(closeableHttpResponse) => EntityUtils consume (closeableHttpResponse getEntity)
+          case None                        => logger.error("The response status is success but response is None.")
+        }
       }
 
+      // all jobs have been done
       if (counter == 0) {
         engine tell (Constant.workDownMessage, self)
       }

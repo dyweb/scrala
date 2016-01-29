@@ -7,4 +7,4 @@ import com.gaocegege.scrala.core.common.response.Response
  * Request interface
  * @author gaoce
  */
-trait Request {}
+trait Request

@@ -6,4 +6,4 @@ import org.apache.http.client.methods.CloseableHttpResponse
  * Response interface
  * @author gaoce
  */
-trait Response {}
+trait Response

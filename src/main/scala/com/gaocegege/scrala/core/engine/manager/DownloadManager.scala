@@ -19,9 +19,9 @@ abstract class DownloadManager(val engine: ActorRef) extends Actor {
   var counter = 0
 
   /** worker actor */
-  var workers: immutable.List[ActorRef] = immutable.List[ActorRef]()
+  var workers: immutable.List[ActorRef] = immutable List[ActorRef]()
 
   /** call back info map */
-  var callBackMap: immutable.Map[URI, (HttpResponse) => Unit] = immutable.Map[URI, (HttpResponse) => Unit]()
+  var callBackMap: immutable.Map[URI, (HttpResponse) => Unit] = immutable Map[URI, (HttpResponse) => Unit]()
 
 }

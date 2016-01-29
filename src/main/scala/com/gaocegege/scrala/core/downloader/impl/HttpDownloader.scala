@@ -28,15 +28,14 @@ class HttpDownloader extends DefaultHttpClient with Actor with Downloader {
 
   def download(request: HttpRequest): Response = {
     logger debug ("Url: " + ((request request) getURI))
-    var response: HttpResponse = null
     Try(httpClient execute (request.request)) match {
       case Success(rawResponse) => {
-        response = new HttpResponse(rawResponse)
+        val response = new HttpResponse(rawResponse)
         response
       }
       case Failure(ex) => {
         logger error (s"Problem rendering URL content: ${ex.getMessage}")
-        response = new HttpResponse(false)
+        val response = new HttpResponse(false)
         response
       }
     }

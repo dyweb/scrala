@@ -12,6 +12,8 @@ import akka.actor.{ Props, ActorRef, Actor }
 import com.gaocegege.scrala.core.common.util.Constant
 import com.gaocegege.scrala.core.engine.manager.DownloadManager
 import akka.actor.PoisonPill
+import com.gaocegege.scrala.core.engine.manager.impl.DefaultDownloadManager
+import com.gaocegege.scrala.core.engine.manager.DownloadManager
 
 /**
  * Engine, responsable for ?
@@ -19,15 +21,15 @@ import akka.actor.PoisonPill
  */
 class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
 
-  private val filter = spider filter
+  val filter = spider filter
 
-  private val delay = spider delay
+  val delay = spider delay
 
-  private val logger = Logger(LoggerFactory getLogger ("Engine"))
+  val logger = Logger(LoggerFactory getLogger ("Engine"))
 
   logger info ("Worker count-" + (spider workerCount))
 
-  private val downloaderManager: ActorRef = context actorOf (Props(new DownloadManager(self, spider workerCount)), "downloadermanager")
+  val downloaderManager: ActorRef = context actorOf (Props(new DefaultDownloadManager(self, spider workerCount)), "downloadermanager")
 
   def receive = {
     // request from the spider class

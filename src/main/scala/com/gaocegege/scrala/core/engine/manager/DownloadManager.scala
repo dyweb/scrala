@@ -1,10 +1,9 @@
 package com.gaocegege.scrala.core.engine.manager
 
-import akka.actor.Actor
 import com.gaocegege.scrala.core.downloader.Downloader
 import scala.collection.mutable
 import com.gaocegege.scrala.core.downloader.impl.HttpDownloader
-import akka.actor.{ Props, ActorRef }
+import akka.actor.{ Props, ActorRef, Actor }
 import scala.util.Random
 import com.typesafe.scalalogging.Logger
 import org.slf4j.LoggerFactory
@@ -12,7 +11,6 @@ import com.gaocegege.scrala.core.common.util.Constant
 import com.gaocegege.scrala.core.common.request.impl.HttpRequest
 import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 import org.apache.http.util.EntityUtils
-import com.sun.org.apache.xpath.internal.operations.String
 import java.net.URI
 
 /**

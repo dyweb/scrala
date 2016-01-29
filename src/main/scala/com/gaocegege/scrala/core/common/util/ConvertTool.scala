@@ -1,8 +1,7 @@
 package com.gaocegege.scrala.core.common.util
 
 import org.apache.http.client.methods.CloseableHttpResponse
-import java.io.BufferedReader
-import java.io.InputStreamReader
+import java.io.{ InputStreamReader, BufferedReader }
 
 /**
  * convert tool

@@ -6,8 +6,7 @@ import com.gaocegege.scrala.core.downloader.impl.HttpDownloader
 import com.gaocegege.scrala.core.common.request.impl.HttpRequest
 import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 import com.gaocegege.scrala.core.engine.Engine
-import akka.actor.ActorSystem
-import akka.actor.Props
+import akka.actor.{ ActorSystem, Props }
 import com.gaocegege.scrala.core.common.util.Constant
 
 /**

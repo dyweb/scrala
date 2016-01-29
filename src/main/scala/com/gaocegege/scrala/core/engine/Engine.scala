@@ -31,7 +31,7 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
 
   def receive = {
     // request from the spider class
-    case (url: String, callback: Function1[HttpResponse, Unit]) => {
+    case (url: String, callback: ((HttpResponse) => Unit)) => {
       logger info ("Request created, the url is " + url)
       if (filter filter (url)) {
         scheduler push (new HttpRequest(new HttpGet(url), callback))

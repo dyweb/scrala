@@ -9,9 +9,7 @@ import akka.actor.Actor
 import com.gaocegege.scrala.core.common.request.impl.HttpRequest
 import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 import com.gaocegege.scrala.core.common.util.Constant
-import scala.util.Try
-import scala.util.Success
-import scala.util.Failure
+import scala.util.{ Try, Success, Failure }
 
 /**
  * Http downloader

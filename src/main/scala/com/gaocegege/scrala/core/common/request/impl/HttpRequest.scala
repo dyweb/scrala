@@ -8,5 +8,4 @@ import com.gaocegege.scrala.core.common.response.impl.HttpResponse
 /**
  * Request class
  */
-class HttpRequest(val request: HttpUriRequest, val callback: (HttpResponse) => Unit) extends Request {
-}
+class HttpRequest(val request: HttpUriRequest, val callback: (HttpResponse) => Unit) extends Request {}

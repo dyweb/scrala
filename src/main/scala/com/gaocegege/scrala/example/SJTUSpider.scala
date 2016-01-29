@@ -27,7 +27,7 @@ class SJTUSpider extends DefaultSpider {
   def startUrl = names map { name => getUrlByLocation(name) }
 
   def parse(response: HttpResponse): Unit = {
-    val json = JsonMethods parse (response getContent)
+    val json = JsonMethods parse (response content)
     (for {
       JObject(child) <- json
       JField("url", JString(url)) <- child
@@ -37,7 +37,7 @@ class SJTUSpider extends DefaultSpider {
   }
 
   def getUserDetail(response: HttpResponse): Unit = {
-    val json = JsonMethods parse (response getContent)
+    val json = JsonMethods parse (response content)
     val writer = new FileWriter("dump.txt", true)
     writer write (((json \ "login") values) + "\t" + ((json \ "home_url") values) + "\t" + ((json \ "followers") values) + "\n")
     writer close ()

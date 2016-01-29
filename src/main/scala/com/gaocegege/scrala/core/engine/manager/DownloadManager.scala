@@ -1,7 +1,7 @@
 package com.gaocegege.scrala.core.engine.manager
 
 import com.gaocegege.scrala.core.downloader.Downloader
-import scala.collection.mutable
+import scala.collection.immutable
 import com.gaocegege.scrala.core.downloader.impl.HttpDownloader
 import akka.actor.{ Props, ActorRef, Actor }
 import scala.util.Random
@@ -25,14 +25,14 @@ class DownloadManager(engine: ActorRef, val threadCount: Int = 4) extends Actor 
   private var counter = 0
 
   /** worker actor */
-  private val workers: mutable.ListBuffer[ActorRef] = new mutable.ListBuffer[ActorRef]()
+  private var workers: immutable.List[ActorRef] = immutable.List[ActorRef]()
 
   for (i <- 1 to threadCount) {
-    workers append (context actorOf (Props[HttpDownloader], "worker-" + (i toString)))
+    workers = (context actorOf (Props[HttpDownloader], "worker-" + (i toString))) :: workers
   }
 
   /** call back info map */
-  private var callBackMap: mutable.Map[URI, (HttpResponse) => Unit] = new mutable.HashMap[URI, (HttpResponse) => Unit]()
+  private var callBackMap: immutable.Map[URI, (HttpResponse) => Unit] = immutable.Map[URI, (HttpResponse) => Unit]()
 
   /**
    * request, work; end, tell me.
@@ -56,11 +56,11 @@ class DownloadManager(engine: ActorRef, val threadCount: Int = 4) extends Actor 
       counter = counter + 1
 
       // do the callback function
-      if (!(response getStatus)) {
+      if (!(response isSuccess)) {
         logger.error("Error getting the response for " + uri)
       } else {
         callBackMap(uri)(response)
-        val entity = ((response getResponse) getEntity)
+        val entity = (((response httpResponse) get) getEntity)
         EntityUtils consume (entity)
       }
 

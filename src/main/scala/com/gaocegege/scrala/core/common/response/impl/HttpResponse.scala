@@ -10,41 +10,19 @@ import org.jsoup.nodes.Document
  * Response class
  * TODO: the code is in bad stayle
  */
-class HttpResponse extends Response {
-
-  private var httpResponse: Option[CloseableHttpResponse] = None
+class HttpResponse(val httpResponse: Option[CloseableHttpResponse], val isSuccess: Boolean) extends Response {
 
   /** content of the response */
-  private lazy val content = ConvertTool.convertResponse2String(httpResponse get)
+  lazy val content = ConvertTool.convertResponse2String(httpResponse get)
 
   /** content parser */
-  private lazy val contentParser: Document = Jsoup.parse(content)
-
-  private var isSuccess = true
+  lazy val contentParser: Document = Jsoup.parse(content)
 
   def this(isSuccessParam: Boolean) = {
-    this()
-    this.isSuccess = isSuccessParam
+    this(None, isSuccessParam)
   }
 
   def this(httpResponseParam: CloseableHttpResponse) = {
-    this(true)
-    httpResponse = Some(httpResponseParam)
-  }
-
-  def getResponse(): CloseableHttpResponse = {
-    httpResponse get
-  }
-
-  def getContentParser(): Document = {
-    contentParser
-  }
-
-  def getContent(): String = {
-    content
-  }
-
-  def getStatus(): Boolean = {
-    isSuccess
+    this(Some(httpResponseParam), true)
   }
 }

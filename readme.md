@@ -13,7 +13,7 @@ scrala is a web crawling framework for scala, which is inspired by [scrapy](http
 
 ### the docker way
 
-[![](https://badge.imagelayers.io/gaocegege/scrala:latest.svg)](https://imagelayers.io/?images=gaocegege/scrala:latest 'Get your own badge on imagelayers.io')
+[![](https://images.microbadger.com/badges/image/gaocegege/scrala.svg)](https://microbadger.com/images/gaocegege/scrala "Get your own image badge on microbadger.com")
 
 [gaocegege/scrala in dockerhub](https://hub.docker.com/r/gaocegege/scrala/)
 

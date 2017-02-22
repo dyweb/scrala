@@ -87,4 +87,4 @@ You can get the example project in the `./example/`
 
 ## For Developer
 
-scrala is under active development, feel free to contribute.
+scrala is under active development, feel free to contribute documentation, test cases, pull requests, issues, and anything you want. I'm a newcomer to scala so the code is hard to read. I'm glad to see someone familiar with scala coding standards could do some code reviews for the repo :)

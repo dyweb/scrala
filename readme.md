@@ -9,9 +9,9 @@
 
 scrala is a web crawling framework for scala, which is inspired by [scrapy](https://github.com/scrapy/scrapy).
 
-## install
+## Installation
 
-### the docker way
+### From Docker
 
 [![](https://images.microbadger.com/badges/image/gaocegege/scrala.svg)](https://microbadger.com/images/gaocegege/scrala "Get your own image badge on microbadger.com")
 
@@ -31,7 +31,7 @@ FROM gaocegege/scrala:latest
 docker run -v <your src>:/app/src -v <your ivy2 directory>:/root/.ivy2  gaocegege/scrala
 ```
 
-### the sbt way
+### From SBT
 
 **Step 1.** Add it in your build.sbt at the end of resolvers:
 
@@ -41,7 +41,7 @@ docker run -v <your src>:/app/src -v <your ivy2 directory>:/root/.ivy2  gaocegeg
 
 	libraryDependencies += "com.github.gaocegege" % "scrala" % "0.1.5"
 
-### normal way
+### From Source Code
 
 	git clone https://github.com/gaocegege/scrala.git
 	cd ./scrala
@@ -49,7 +49,7 @@ docker run -v <your src>:/app/src -v <your ivy2 directory>:/root/.ivy2  gaocegeg
 
 You will get the jar in `./target/scala-<version>/`.
 
-## example
+## Example
 
 	import com.gaocegege.scrala.core.spider.impl.DefaultSpider
 	import com.gaocegege.scrala.core.common.response.Response
@@ -85,12 +85,6 @@ Just like the scrapy, what you need to do is define a `startUrl` to tell me wher
 
 You can get the example project in the `./example/`
 
-## for developer
+## For Developer
 
-### roadmap
-
-Next version is 0.2, which is also a dev version
-
-1. keep the log output simple and stupid
-2. add tests to keep the multi thread downloader high performance 
-3. add new feature: rules in the spider
+scrala is under active development, feel free to contribute.

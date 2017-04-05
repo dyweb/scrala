@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/gaocegege/scrala.svg?branch=master)](https://travis-ci.org/gaocegege/scrala)
 ![License](https://img.shields.io/pypi/l/Django.svg)
 [![scrala published](https://jitpack.io/v/gaocegege/scrala.svg)](https://jitpack.io/#gaocegege/scrala)
-[![Docker Pulls](https://img.shields.io/docker/pulls/gaocegege/scarala.svg)](https://hub.docker.com/r/gaocegege/scrala/)
+[![Docker Pulls](https://img.shields.io/docker/pulls/gaocegege/scrala.svg)](https://hub.docker.com/r/gaocegege/scrala/)
 [![Join the chat at https://gitter.im/gaocegege/scrala](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gaocegege/scrala?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 scrala is a web crawling framework for scala, which is inspired by [scrapy](https://github.com/scrapy/scrapy).

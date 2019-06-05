@@ -15,3 +15,5 @@ libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2"
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
 
 libraryDependencies += "org.json4s" %% "json4s-native" % "3.6.6"
+
+libraryDependencies += "com.google.guava" % "guava" % "27.1-jre"

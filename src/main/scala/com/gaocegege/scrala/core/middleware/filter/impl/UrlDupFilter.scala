@@ -16,7 +16,7 @@ class UrlDupFilter extends Filter {
 
   def filter(url: String): Boolean = {
     if (urlSeens contains url) {
-      logger debug ("Dumplicate Url: " + url)
+      logger debug ("Duplicate url: " + url)
       false
     } else {
       urlSeens = urlSeens + url

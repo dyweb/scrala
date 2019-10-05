@@ -58,7 +58,7 @@ class Engine(val spider: Spider, val scheduler: Scheduler) extends Actor {
     }
     case (Constant.workDownMessage) => {
       if ((scheduler count) == 0) {
-        (context system) shutdown
+        context.system.terminate
       }
     }
     case _ => logger warn ("Unexpected message")
